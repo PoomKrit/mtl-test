@@ -3,18 +3,18 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 4.0"
+      version = ">= 5.0"
     }
   }
 
   # Adding Backend as S3 for Remote State Storage
-  backend "s3" {
-    bucket  = "mtl-test-tf-state-bucket"
-    key     = "go-app/terraform.tfstate"
-    region  = "ap-southeast-1"
-    encrypt = true
-    profile = "mtl-test"
-  }
+  # backend "s3" {
+  #   bucket  = "mtl-test-tf-state-bucket"
+  #   key     = "go-app/terraform.tfstate"
+  #   region  = "ap-southeast-1"
+  #   encrypt = true
+  #   profile = "mtl-test"
+  # }
 }
 
 provider "aws" {

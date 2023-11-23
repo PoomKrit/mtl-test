@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root-apps
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: argocd
+    name: in-cluster # EKS cluster arn
+  project: default
+  syncPolicy:
+    automated:
+      prune: false 
+      selfHeal: true
+  source:
+    path: cd
+    repoURL: git@github.com:PoomKrit/mtl-test.git
+    targetRevision: HEAD
+    directory:
+      recurse: true
+      include: 'go-app.yaml'

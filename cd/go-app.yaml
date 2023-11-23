@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: go-application
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: mtl-test
+    name: in-cluster # EKS cluster arn
+  project: default
+  syncPolicy:
+    automated:
+      prune: false 
+      selfHeal: true
+  source:
+    path: helm
+    repoURL: git@github.com:PoomKrit/mtl-test.git
+    targetRevision: HEAD
+    helm:
+      releaseName: 'go-application'
+      valueFiles: ['values.yaml']
