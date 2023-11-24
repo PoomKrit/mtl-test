@@ -2,25 +2,27 @@ module "eks" {
   source          = "terraform-aws-modules/eks/aws"
   version         = "19.20.0"
   cluster_name    = local.cluster_name
-  cluster_version = "1.21"
+  cluster_version = "1.27"
+  cluster_endpoint_public_access = true
   subnet_ids      = module.vpc.private_subnets
 
   vpc_id = module.vpc.vpc_id
 
   eks_managed_node_groups = {
-    default = {
-      desired_capacity = 2
-      max_capacity     = 3
-      min_capacity     = 1
+    default_node_group = {
+      use_custom_launch_template = false
+      disk_size = 50
+      desired_size = 2
+      max_size     = 3
+      min_size     = 1
+      remote_access = {
+        ec2_ssh_key               = module.key_pair.key_pair_name
+        source_security_group_ids = [aws_security_group.remote_access.id]
+      }
 
-      instance_type = "t3a.small"
-      key_name      = module.key_pair.key_pair_name
+      ami_type = "AL2_ARM_64"
+      instance_types = ["t4g.medium"]
     }
-  }
-
-  iam_role_additional_policies = {
-    s3Policy  = aws_iam_policy.s3_policy.arn
-    sqsPolicy = aws_iam_policy.sqs_policy.arn
   }
 }
 
@@ -32,43 +34,26 @@ module "key_pair" {
   create_private_key = true
 }
 
-resource "aws_iam_policy" "s3_policy" {
-  name        = "s3-policy"
-  description = "IAM policy for accessing S3 from EKS"
+resource "aws_security_group" "remote_access" {
+  name_prefix = "${local.key_name}-remote-access"
+  description = "Allow remote SSH access"
+  vpc_id      = module.vpc.vpc_id
 
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Action = [
-          "s3:GetObject",
-          "s3:PutObject"
-        ],
-        Effect   = "Allow",
-        Resource = local.s3_resource
-      },
-    ],
-  })
-}
+  ingress {
+    description = "SSH access"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["10.0.0.0/8"]
+  }
 
-resource "aws_iam_policy" "sqs_policy" {
-  name        = "sqs-policy"
-  description = "IAM policy for accessing SQS from EKS"
-
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Action = [
-          "sqs:SendMessage",
-          "sqs:ReceiveMessage",
-          "sqs:DeleteMessage"
-        ],
-        Effect   = "Allow",
-        Resource = local.sqs_resource
-      },
-    ],
-  })
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
 }
 
 module "eks_blueprints_addons" {

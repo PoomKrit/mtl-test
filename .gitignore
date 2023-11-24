@@ -4,7 +4,9 @@
 # Terraform package files
 .terraform/
 .terraform.lock.hcl
+.terraform.tfstate*
 terraform.tfstate
+terraform.tfstate*
 
 # charts directory & lock file
 charts/**/charts

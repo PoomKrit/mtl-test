@@ -13,9 +13,11 @@ spec:
     automated:
       prune: false 
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
   source:
     path: helm
-    repoURL: git@github.com:PoomKrit/mtl-test.git
+    repoURL: https://github.com/PoomKrit/mtl-test.git
     targetRevision: HEAD
     helm:
       releaseName: 'go-application'

@@ -16,7 +16,7 @@ spec:
       selfHeal: true
   source:
     path: cd
-    repoURL: git@github.com:PoomKrit/mtl-test.git
+    repoURL: https://github.com/PoomKrit/mtl-test.git
     targetRevision: HEAD
     directory:
       recurse: true
