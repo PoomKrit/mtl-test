@@ -6,7 +6,7 @@ metadata:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: mtl-test
+    namespace: mtl-test-dev
     name: in-cluster # EKS cluster arn
   project: default
   syncPolicy:
