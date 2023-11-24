@@ -18,5 +18,5 @@ spec:
     repoURL: git@github.com:PoomKrit/mtl-test.git
     targetRevision: HEAD
     helm:
-      releaseName: 'go-application-develop'
+      releaseName: 'go-application'
       valueFiles: ['values-develop.yaml']

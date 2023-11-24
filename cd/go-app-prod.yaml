@@ -20,5 +20,5 @@ spec:
     repoURL: https://github.com/PoomKrit/mtl-test.git
     targetRevision: HEAD
     helm:
-      releaseName: 'go-application-production'
+      releaseName: 'go-application'
       valueFiles: ['values-production.yaml']
