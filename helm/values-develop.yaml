@@ -1,0 +1,30 @@
+replicaCount: 1
+
+image:
+  repository: poomkrit/mtl-test
+  pullPolicy: IfNotPresent
+  tag: "dev-latest"
+
+service:
+  type: ClusterIP
+  port: 8080
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 64Mi
+  requests:
+    cpu: 50m
+    memory: 32Mi
+
+istio:
+  enabled: false
+  gateway:
+    name: go-application-gateway
+    hosts:
+      - "dev.go-app.com"
+  virtualService:
+    hosts:
+      - "dev.go-app.com"
+    gateways:
+      - go-application-gateway

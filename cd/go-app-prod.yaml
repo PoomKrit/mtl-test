@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: go-application
+  name: go-application-production
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
@@ -13,10 +13,12 @@ spec:
     automated:
       prune: false 
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
   source:
     path: helm
-    repoURL: git@github.com:PoomKrit/mtl-test.git
+    repoURL: https://github.com/PoomKrit/mtl-test.git
     targetRevision: HEAD
     helm:
       releaseName: 'go-application'
-      valueFiles: ['values.yaml']
+      valueFiles: ['values-production.yaml']
